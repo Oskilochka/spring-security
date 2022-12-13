@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static com.security.security.config.ApplicationUserRole.ADMIN;
+import static com.security.security.config.ApplicationUserRole.STUDENT;
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -46,10 +48,19 @@ public class ApplicationSecurityConfiguration {
         UserDetails juliaUser = User.builder()
                 .username("julia")
                 .password(passwordEncoder.encode("password"))
-                .roles("STUDENT")
+                .roles(STUDENT.name())
                 .build();
+
+        UserDetails adminUser = User.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("admin"))
+                .roles(ADMIN.name())
+                .build();
+
+
         return new InMemoryUserDetailsManager(
-                juliaUser
+                juliaUser,
+                adminUser
         );
     }
 }
