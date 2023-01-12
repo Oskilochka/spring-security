@@ -31,12 +31,12 @@ public class ApplicationSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable().authorizeHttpRequests(auth -> auth
-                        .requestMatchers("").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/management/api/**").hasAuthority(COURSE_WRITE.name())
-                        .requestMatchers(HttpMethod.POST, "/management/api/**").hasAuthority(COURSE_WRITE.name())
-                        .requestMatchers(HttpMethod.PUT, "/management/api/**").hasAuthority(COURSE_WRITE.name())
+//                        .requestMatchers("").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+                        .requestMatchers(HttpMethod.POST, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+                        .requestMatchers(HttpMethod.PUT, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
                         .requestMatchers(HttpMethod.GET, "/management/api/**").hasAnyRole(ADMIN.name(), ADMINTRAINEE.name())
-                        .requestMatchers("/api/**").hasRole(ADMIN.name())
+                        .requestMatchers("").hasRole(ADMIN.name())
                         .anyRequest()
                         .authenticated()
                 )
@@ -50,21 +50,24 @@ public class ApplicationSecurityConfiguration {
         UserDetails juliaUser = User.builder()
                 .username("julia")
                 .password(passwordEncoder.encode("password"))
-                .roles(STUDENT.name())
+                .authorities(STUDENT.getGrantedAuthority())
+//                .roles(STUDENT.name())
                 .build();
 
 //        ADMIN
         UserDetails adminUser = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))
-                .roles(ADMIN.name())
+//                .roles(ADMIN.name())
+                .authorities(ADMIN.getGrantedAuthority())
                 .build();
 
 //      ADMIN Trainee
         UserDetails adminTraineeUser = User.builder()
                 .username("adminTrainee")
                 .password(passwordEncoder.encode("admin"))
-                .roles(ADMINTRAINEE.name())
+                .authorities(ADMINTRAINEE.getGrantedAuthority())
+//                .roles(ADMINTRAINEE.name())
                 .build();
 
         return new InMemoryUserDetailsManager(
